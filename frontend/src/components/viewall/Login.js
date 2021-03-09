@@ -18,7 +18,7 @@ function Login () {
           <Header type='Login' />
           <RegLogin props={props} />
         </main>
-        <Footer />
+        
       </body>
     </div>
   )
