@@ -23,7 +23,15 @@ function Register() {
           <section class="login_part section_padding ">
               <div class="container">
                   <div class="row align-items-center">
-                      
+                  <div class="col-lg-6 col-md-6">
+                        <div class="login_part_text text-center">
+                            <div class="login_part_text_iner">
+                                <h2>Already have an account?</h2>
+                                
+                                <a href="login" class="btn_3">Log In</a>
+                            </div>
+                        </div>
+                    </div>
                       <div class="col-lg-6 col-md-6">
                           <div class="login_part_form">
                               <div class="login_part_form_iner">
@@ -44,9 +52,9 @@ function Register() {
                                               <label for="f-option">Remember me</label>
                                           </div>
                                           <button type="submit" value="submit" class="btn_3">
-                                              log in
+                                              Register
                                           </button>
-                                          <a class="lost_pass" href="#">forget password?</a>
+                                          {/* <a class="lost_pass" href="#">forget password?</a> */}
                                       </div>
                                   </form>
                               </div>
