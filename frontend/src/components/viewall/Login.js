@@ -7,6 +7,7 @@ function Login () {
   const props = {
     question: 'New Around Here ?',
     orstep: 'Sign Up',
+    orstepurl: 'register',
     statement: <div> Welcome Back ! <br />Please Sign in now </div>,
     thisstep: 'Login'
   }
@@ -18,7 +19,6 @@ function Login () {
           <Header type='Login' />
           <RegLogin props={props} />
         </main>
-        
       </body>
     </div>
   )

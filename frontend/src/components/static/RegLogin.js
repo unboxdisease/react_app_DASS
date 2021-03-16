@@ -1,7 +1,45 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
 // import axios from 'axios'
 
+const schema = yup.object().shape({
+  username: yup.string().required(),
+  password: yup.string().required()
+})
+
 function RegLogin (props) {
+  const { register, handleSubmit, errors } = useForm({
+    reValidateMode: 'onSubmit',
+    resolver: yupResolver(schema)
+  })
+
+  const initialDetails = {
+    email: '',
+    password: ''
+  }
+
+  const [details, setDetails] = useState(initialDetails)
+
+  const handleChange = (property, event) => {
+    event.persist()
+    console.log(details)
+    setDetails(prevState => {
+      return { ...prevState, [property]: event.target.value }
+    })
+  }
+
+  const onSubmit = async event => {
+    // console.log(details)
+    try {
+      //
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+
   return (
     <section class='login_part section_padding '>
       <div class='container'>
@@ -14,7 +52,7 @@ function RegLogin (props) {
                   There are advances being made in science and technology
                   everyday, and a good example of this is the
                 </p>
-                <a href='register' class='btn_3'>
+                <a href={props.props.orstepurl} class='btn_3'>
                   {props.props.orstep}
                 </a>
               </div>
@@ -33,16 +71,20 @@ function RegLogin (props) {
                   action='#'
                   method='post'
                   novalidate='novalidate'
+                  onSubmit={handleSubmit(onSubmit)}
                 >
                   <div class='col-md-12 form-group p_star'>
                     <input
                       type='text'
                       class='form-control'
-                      id='name'
-                      name='name'
-                      value=''
+                      id='username'
+                      name='username'
+                      value={details.email}
                       placeholder='Username'
+                      onChange={event => handleChange('username', event)}
+                      ref={register}
                     />
+                    <p style={{ color: 'red' }}>{errors.username?.message}</p>
                   </div>
                   <div class='col-md-12 form-group p_star'>
                     <input
@@ -50,9 +92,12 @@ function RegLogin (props) {
                       class='form-control'
                       id='password'
                       name='password'
-                      value=''
+                      value={details.password}
                       placeholder='Password'
+                      onChange={event => handleChange('message', event)}
+                      ref={register}
                     />
+                    <p style={{ color: 'red' }}>{errors.password?.message}</p>
                   </div>
                   <div class='col-md-12 form-group'>
                     <div class='creat_account d-flex align-items-center'>

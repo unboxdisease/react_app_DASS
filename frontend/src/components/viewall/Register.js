@@ -7,6 +7,7 @@ function Register () {
   const props = {
     question: 'Already an User ?',
     orstep: 'Log In',
+    orstepurl: 'login',
     statement: <div> Welcome to Curation ! <br />Please Sign Up now </div>,
     thisstep: 'Register'
   }
@@ -18,7 +19,7 @@ function Register () {
           <Header type='Register' />
           <RegLogin props={props} />
         </main>
-        <Footer />
+        {/* <Footer /> */}
       </body>
     </div>
   )
