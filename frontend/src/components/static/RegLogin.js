@@ -6,7 +6,9 @@ import * as yup from 'yup'
 
 const schema = yup.object().shape({
   username: yup.string().required(),
-  password: yup.string().required()
+  password: yup.string().required(),
+  email: yup.string().required(),
+  cantact: yup.number().test('len', 'Must be exactly 10 characters', val => val.toString().length === 10)
 })
 
 function RegLogin (props) {
@@ -17,7 +19,10 @@ function RegLogin (props) {
 
   const initialDetails = {
     email: '',
-    password: ''
+    password: '',
+    
+    username:(props.props.thisstep==='Login')? 'None':'',
+    contact:(props.props.thisstep==='Login')? 'None':''
   }
 
   const [details, setDetails] = useState(initialDetails)
@@ -33,7 +38,8 @@ function RegLogin (props) {
   const onSubmit = async event => {
     // console.log(details)
     try {
-      //
+
+      
     } catch (err) {
       console.log(err)
     }
@@ -73,18 +79,33 @@ function RegLogin (props) {
                   novalidate='novalidate'
                   onSubmit={handleSubmit(onSubmit)}
                 >
+                   {(props.props.thisstep === 'Register') &&
+                   <div class='col-md-12 form-group p_star'>
+                   <input
+                     type='text'
+                     class='form-control'
+                     id='username'
+                     name='username'
+                     value={details.username}
+                     placeholder='Username'
+                     onChange={event => handleChange('username', event)}
+                     ref={register}
+                   />
+                   <p style={{ color: 'red' }}>{errors.username?.message}</p>
+                 </div> }
+                  
                   <div class='col-md-12 form-group p_star'>
                     <input
                       type='text'
                       class='form-control'
-                      id='username'
-                      name='username'
+                      id='Email'
+                      name='Email'
                       value={details.email}
-                      placeholder='Username'
-                      onChange={event => handleChange('username', event)}
+                      placeholder='Email'
+                      onChange={event => handleChange('email', event)}
                       ref={register}
                     />
-                    <p style={{ color: 'red' }}>{errors.username?.message}</p>
+                    <p style={{ color: 'red' }}>{errors.email?.message}</p>
                   </div>
                   <div class='col-md-12 form-group p_star'>
                     <input
@@ -94,11 +115,25 @@ function RegLogin (props) {
                       name='password'
                       value={details.password}
                       placeholder='Password'
-                      onChange={event => handleChange('message', event)}
+                      onChange={event => handleChange('password', event)}
                       ref={register}
                     />
                     <p style={{ color: 'red' }}>{errors.password?.message}</p>
                   </div>
+                  {(props.props.thisstep === 'Register') &&  <div class='col-md-12 form-group p_star'>
+                    <input
+                      type='number'
+                      class='form-control'
+                      id='contact'
+                      name='contact'
+                      value={details.contact}
+                      placeholder='Contact number'
+                      onChange={event => handleChange('contact', event)}
+                      ref={register}
+                    />
+                    <p style={{ color: 'red' }}>{errors.contact?.message}</p>
+                  </div>}
+                 
                   <div class='col-md-12 form-group'>
                     <div class='creat_account d-flex align-items-center'>
                       <input type='checkbox' id='f-option' name='selector' />
