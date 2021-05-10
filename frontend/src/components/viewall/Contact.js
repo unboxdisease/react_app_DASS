@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios'
 import Header from '../static/Header'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -44,10 +45,56 @@ function Contact () {
       console.log(err)
     }
   }
+
+const [data, setData] = useState([]);
+const [isLoading, setLoad] = useState(true);
+
+const fetchData = async () => {
+    try {
+        let res= await axios.get('http://localhost:8000/api/admins/getAll.php')
+        // console.log(JSON.stringify(res))
+        // console.log(res.data)
+        setData(res.data);
+        setLoad(false);
+        
+      } catch (err) {
+        console.log(err.response)
+      }
+}
+
+// setLoad(false);
+useEffect(()=> {
+    fetchData()
+  },[]);
+
+  let adminLists = []
+
+  for (let key in data) {
+    adminLists.push((
+      <li key = {key.ID}>
+        <p >
+          <b>{data[key].Name}</b> <p>     </p>{data[key].Email}
+        </p>
+        </li>)
+    )}
+    
+
+  console.log(data)
+
   return (
     <div>
       <Header type='Get in touch' />
       <section class='contact-section'>
+      <div class='blog_right_sidebar container'>
+      <div class='row '>
+      <div class='col mt-2'>
+          <aside class='single_sidebar_widget post_category_widget'>
+            <h4 class='widget_title'>Admins That You can Contact</h4>
+            <ul class='list cat-list'>
+              {adminLists}
+            </ul>
+          </aside>
+        </div></div></div>
         <div class='container'>
           <div class='row'>
             <div class='col-lg-8'>
@@ -148,8 +195,8 @@ function Contact () {
                   <i class='ti-home'></i>
                 </span>
                 <div class='media-body'>
-                  <h3>Buttonwood, California.</h3>
-                  <p>Rosemead, CA 91770</p>
+                  <h3>NetiSoft</h3>
+                  <p>Bangalore</p>
                 </div>
               </div>
               <div class='media contact-info'>
@@ -166,7 +213,7 @@ function Contact () {
                   <i class='ti-email'></i>
                 </span>
                 <div class='media-body'>
-                  <h3>support@colorlib.com</h3>
+                  <h3>support@NetiSoft.com</h3>
                   <p>Send us your query anytime!</p>
                 </div>
               </div>

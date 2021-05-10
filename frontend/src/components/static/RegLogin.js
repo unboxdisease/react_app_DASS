@@ -47,43 +47,43 @@ function RegLogin (props) {
 
 
   return (
-    <section class='login_part section_padding '>
-      <div class='container'>
-        <div class='row align-items-center'>
-          <div class='col-lg-6 col-md-6'>
-            <div class='login_part_text text-center'>
-              <div class='login_part_text_iner'>
+    <section className='login_part section_padding '>
+      <div className='container'>
+        <div className='row align-items-center'>
+          <div className='col-lg-6 col-md-6'>
+            <div className='login_part_text text-center'>
+              <div className='login_part_text_iner'>
                 <h2>{props.props.question}</h2>
                 <p>
                   There are advances being made in science and technology
                   everyday, and a good example of this is the
                 </p>
-                <a href={props.props.orstepurl} class='btn_3'>
+                <a href={props.props.orstepurl} className='btn_3'>
                   {props.props.orstep}
                 </a>
               </div>
             </div>
           </div>
-          <div class='col-lg-6 col-md-6'>
-            <div class='login_part_form'>
-              <div class='login_part_form_iner'>
+          <div className='col-lg-6 col-md-6'>
+            <div className='login_part_form'>
+              <div className='login_part_form_iner'>
                 <h3>
                   {props.props.statement}
                   {/* Welcome Back ! <br />
                     Please Sign in now */}
                 </h3>
                 <form
-                  class='row contact_form'
+                  className='row contact_form'
                   action='#'
                   method='post'
                   novalidate='novalidate'
                   onSubmit={handleSubmit(onSubmit)}
                 >
                    {(props.props.thisstep === 'Register') &&
-                   <div class='col-md-12 form-group p_star'>
+                   <div className='col-md-12 form-group p_star'>
                    <input
                      type='text'
-                     class='form-control'
+                     className='form-control'
                      id='username'
                      name='username'
                      value={details.username}
@@ -94,10 +94,10 @@ function RegLogin (props) {
                    <p style={{ color: 'red' }}>{errors.username?.message}</p>
                  </div> }
                   
-                  <div class='col-md-12 form-group p_star'>
+                  <div className='col-md-12 form-group p_star'>
                     <input
                       type='text'
-                      class='form-control'
+                      className='form-control'
                       id='Email'
                       name='Email'
                       value={details.email}
@@ -107,10 +107,10 @@ function RegLogin (props) {
                     />
                     <p style={{ color: 'red' }}>{errors.email?.message}</p>
                   </div>
-                  <div class='col-md-12 form-group p_star'>
+                  <div className='col-md-12 form-group p_star'>
                     <input
                       type='password'
-                      class='form-control'
+                      className='form-control'
                       id='password'
                       name='password'
                       value={details.password}
@@ -120,10 +120,10 @@ function RegLogin (props) {
                     />
                     <p style={{ color: 'red' }}>{errors.password?.message}</p>
                   </div>
-                  {(props.props.thisstep === 'Register') &&  <div class='col-md-12 form-group p_star'>
+                  {(props.props.thisstep === 'Register') &&  <div className='col-md-12 form-group p_star'>
                     <input
                       type='number'
-                      class='form-control'
+                      className='form-control'
                       id='contact'
                       name='contact'
                       value={details.contact}
@@ -134,15 +134,15 @@ function RegLogin (props) {
                     <p style={{ color: 'red' }}>{errors.contact?.message}</p>
                   </div>}
                  
-                  <div class='col-md-12 form-group'>
-                    <div class='creat_account d-flex align-items-center'>
+                  <div className='col-md-12 form-group'>
+                    <div className='creat_account d-flex align-items-center'>
                       <input type='checkbox' id='f-option' name='selector' />
                       <label for='f-option'>Remember me</label>
                     </div>
-                    <button type='submit' value='submit' class='btn_3'>
+                    <button type='submit' value='submit' className='btn_3'>
                       {props.props.thisstep}
                     </button>
-                    {(props.props.thisstep === 'Login') && <a class='lost_pass' href='#'> forget password?</a>}
+                    {(props.props.thisstep === 'Login') && <a className='lost_pass' href='#'> forget password?</a>}
                   </div>
                 </form>
               </div>

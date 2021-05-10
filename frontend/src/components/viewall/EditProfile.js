@@ -7,31 +7,54 @@ import * as yup from 'yup'
 import Cookies from 'js-cookie'
 import axios from 'axios'
 import { Autocomplete } from '@material-ui/lab'
-import { TextField } from '@material-ui/core'
-function Register () {
+import { TextField, unstable_createMuiStrictModeTheme } from '@material-ui/core'
+function EditProfile () {
   const [preferences, setPreferences] = useState([])
   const [selectedPreferences, setSelectedPreferences] = useState([])
+  const [initPref, setInitPref] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const history = useHistory();
 
   useEffect(() => {
     const load = async () => {
       try {
-        // const token = Cookies.get('token')
-        // const config = {
-        //   headers: { Authorization: `Bearer ${token}` }
-        // }
-        // let res = await axios.get('categories/getAll.php')
-        let res = await axios.get('http://localhost:8000/api/categories/getAll.php')
+        let token = Cookies.get('token')
+        if (!token) {
+            history.push('/login');
+        }
+
+
+        const config = {
+            headers: { Authorization: `Bearer ${token}` }
+        }
+        let res = await axios.get('http://localhost:8000/api/users/getCurrentUserDetails.php', config);
+        let userDetails = res.data;
+        console.log('user details: ', userDetails);
+        setDetails({
+          Email: userDetails.Email,
+          Username: userDetails.Username,
+          Contact: userDetails.Contact
+        })
+
+        res = await axios.get('http://localhost:8000/api/categories/getAll.php')
         console.log(JSON.stringify(res))
+        console.log('preferences:', res.data);
         setPreferences(res.data)
+
+        res = await axios.get('http://localhost:8000/api/users/getUserCategories.php', config);
+        console.log('user categories:', res.data);
+        // setInitPref(res.data.map(c => c.Name));
+        // setSelectedPreferences(res.data);
+        setInitPref(res.data);
       } catch (err) {
         console.log(err.response)
       }
     }
     load().then()
   }, [])
+
   const schema = yup.object().shape({
-    username: yup.string().required(),
-    password: yup.string().required(),
+    // username: yup.string().required(),
     email: yup
       .string()
       .required()
@@ -52,29 +75,26 @@ function Register () {
 
   const initialDetails = {
     Email: '',
-    Password: '',
     Username: '',
     Contact: ''
   }
 
   const props = {
     props: {
-      question: 'Already an User ?',
-      orstep: 'Log In',
-      orstepurl: 'login',
+      question: 'Revert?',
+      orstep: 'Profile',
+      orstepurl: '/profile',
       statement: (
         <div>
           {' '}
-          Welcome to Curation ! <br />
-          Please Sign Up now{' '}
+          Edit profile
         </div>
       ),
-      thisstep: 'Register'
+      thisstep: 'Save'
     }
   }
 
   const [details, setDetails] = useState(initialDetails)
-  const history = useHistory()
   const handleChange = (property, event) => {
     event.persist()
     console.log(details)
@@ -93,26 +113,22 @@ function Register () {
     // alert('Hello')
     try {
       // alert(details)
-      let res = await axios.post(
-        'users/register.php',
-        details
-      )
-      console.log(JSON.stringify(res))
-      Cookies.set('token', res.data.token)
-      console.log(JSON.stringify(res))
-      Cookies.set('token', res.data.token, { sameSite: 'Strict', secure: true })
-      const tobesent = {
-        categories: []
-      }
-      console.log(selectedPreferences)
-      tobesent.categories = selectedPreferences.map(x => x.Id)
       const token = Cookies.get('token')
+      console.log(selectedPreferences)
       const config = {
         headers: { Authorization: `Bearer ${token}` }
       }
-      console.log(tobesent)
-      let res1 = await axios.post('users/setUserCategories.php', tobesent, config)
+      let tobesent = details;
+      console.log('to send:', tobesent)
+      let res1 = await axios.post('http://localhost:8000/api/users/editProfile.php', tobesent, config)
       console.log(JSON.stringify(res1))
+
+      if (selectedPreferences.length > 0) {
+        const categoriesUpdate = {"categories": selectedPreferences.map(x => x.Id)};
+        console.log('sending categories', categoriesUpdate);
+        let res2 = await axios.post('http://localhost:8000/api/users/setUserCategories.php', categoriesUpdate, config);
+        console.log(JSON.stringify(res2));
+      }
       history.push({
         pathname: '/feed'
       })
@@ -121,11 +137,15 @@ function Register () {
     }
   }
 
+  useEffect(() => {
+    console.log('Selected prefs: ', selectedPreferences);
+  }, [selectedPreferences])
+
   return (
     <div>
       <body>
         <main>
-          <Header type='Register' />
+          <Header type='Edit Profile' />
           <section class='login_part section_padding '>
             <div class='container'>
               <div class='row align-items-center'>
@@ -134,8 +154,8 @@ function Register () {
                     <div class='login_part_text_iner'>
                       <h2>{props.props.question}</h2>
                       <p>
-                        There are advances being made in science and technology
-                        everyday, and a good example of this is the
+                        Your old preferences are: {(initPref.map(p => p.Name).join(', '))}, which is very cool!
+                        Don't want to edit your profile? Want to just go back to the old one?
                       </p>
                       <a href={props.props.orstepurl} class='btn_3'>
                         {props.props.orstep}
@@ -180,6 +200,7 @@ function Register () {
                             name='username'
                             value={details.Username}
                             placeholder='Username'
+                            disabled
                             onChange={event => handleChange('Username', event)}
                             ref={register}
                           />
@@ -203,21 +224,6 @@ function Register () {
                           </p>
                         </div>
                         <div class='col-md-12 form-group p_star'>
-                          <input
-                            type='password'
-                            class='form-control'
-                            id='password'
-                            name='password'
-                            value={details.Password}
-                            placeholder='Password'
-                            onChange={event => handleChange('Password', event)}
-                            ref={register}
-                          />
-                          <p style={{ color: 'red' }}>
-                            {errors.password?.message}
-                          </p>
-                        </div>
-                        <div class='col-md-12 form-group p_star'>
                           <Autocomplete
                             multiple
                             id='tags-standard'
@@ -225,8 +231,8 @@ function Register () {
                             getOptionLabel={option => option.Name}
                             values={selectedPreferences}
                             getOptionSelected={(option, value) => option.Id === value.Id}
-                            onChange={(event, values) =>
-                              handlePrefChange(event, values)}
+                            onChange={(event, values) => handlePrefChange(event, values)}
+                            defaultValue={initPref}
                             renderInput={params => (
                               <TextField
                                 {...params}
@@ -238,14 +244,6 @@ function Register () {
                           />
                         </div>
                         <div class='col-md-12 form-group'>
-                          <div class='creat_account d-flex align-items-center'>
-                            <input
-                              type='checkbox'
-                              id='f-option'
-                              name='selector'
-                            />
-                            <label for='f-option'>Remember me</label>
-                          </div>
 
                           <button type='submit' value='submit' class='btn_3'>
                             {props.props.thisstep}
@@ -265,4 +263,4 @@ function Register () {
   )
 }
 
-export default Register
+export default EditProfile
